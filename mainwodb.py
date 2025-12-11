@@ -4,11 +4,14 @@ from pydantic import BaseModel
 app = FastAPI()
 
 users = []  # list of lists here each list contains [username, password, email]
-
+loggedInUsers=[] # list of logged in users it contains [username]
 
 class LoginRequest(BaseModel):
     username: str
     password: str
+
+class LogoutRequest(BaseModel):
+    username: str
 
 
 class RegisterRequest(BaseModel):
@@ -20,7 +23,8 @@ class RegisterRequest(BaseModel):
 @app.post("/login")
 def login(request: LoginRequest):
     for user in users:
-        if user[0] == request.username and user[1] == request.password:
+        if user[0] == request.username and user[1] == request.password and request.username not in loggedInUsers:
+            loggedInUsers.append(request.username)
             return "Login successful"
     return "Login failed"
 
@@ -34,6 +38,13 @@ def register(request: RegisterRequest):
 @app.get("/health")
 def health():
     return "Healthy"
+
+@app.post("/logout")
+def logout(request: LogoutRequest):
+    if request.username in loggedInUsers:
+        loggedInUsers.remove(request.username)
+        return "Logout successful"
+    return "User not Logged In"
 
 if __name__ == "__main__":
     print("running...")

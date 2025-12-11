@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException
-from models import UserCreate, UserLogin, UserUpdate
+from models import UserCreate, UserLogin, UserUpdate , Numbers
 from database import users_collection
 from bson import ObjectId
 import bcrypt
@@ -97,3 +97,6 @@ def login(data: UserLogin):
 
     return {"message": "Login successful", "user": serialize_user(user)}
 
+@app.post("/divide")
+def add(data: Numbers):
+    return {"sum": data.a/data.b}

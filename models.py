@@ -13,3 +13,7 @@ class UserUpdate(BaseModel):
 class UserLogin(BaseModel):
     email: EmailStr
     password: str
+
+class Numbers(BaseModel):
+    a:int
+    b:int
